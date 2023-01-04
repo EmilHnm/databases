@@ -1,278 +1,458 @@
 CREATE TABLE Department (
-  DepartmentID INTEGER PRIMARY KEY,
-  DepartmentName VARCHAR(255) NOT NULL,
-  PhoneNumber VARCHAR(255) NOT NULL
+  id INTEGER PRIMARY KEY,
+  department_name VARCHAR(255) UNIQUE NOT NULL,
+  phone_number VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE Employee (
-  EmployeeID INTEGER PRIMARY KEY,
-  FirstName VARCHAR(255) NOT NULL,
-  LastName VARCHAR(255) NOT NULL,
-  DateOfBirth DATE NOT NULL,
-  DepartmentID INTEGER NOT NULL,
-  JobTitle VARCHAR(255) NOT NULL,
-  PhoneNumber VARCHAR(255) NOT NULL,
-  Address VARCHAR(255) NOT NULL,
-  FOREIGN KEY (DepartmentID) REFERENCES Department(DepartmentID)
+  id INTEGER PRIMARY KEY,
+  first_name VARCHAR(255) NOT NULL,
+  last_name VARCHAR(255) NOT NULL,
+  date_of_birth DATE NOT NULL,
+  department_id INTEGER NOT NULL,
+  job_title VARCHAR(255) NOT NULL,
+  phone_number VARCHAR(255) NOT NULL,
+  address VARCHAR(255) NOT NULL,
+  FOREIGN KEY (department_id) REFERENCES Department(id)
 );
 
 CREATE TABLE EmployeeWedding (
-  EmployeeID INTEGER PRIMARY KEY,
-  SpouseID INTEGER NOT NULL,
-  WeddingDate DATE NOT NULL,
-  FOREIGN KEY (EmployeeID) REFERENCES Employee(EmployeeID),
-  FOREIGN KEY (SpouseID) REFERENCES Employee(EmployeeID)
+  id INTEGER PRIMARY KEY,
+  employee_id INTEGER NOT NULL,
+  spouse_id INTEGER NOT NULL,
+  wedding_date DATE NOT NULL,
+  FOREIGN KEY (employee_id) REFERENCES Employee(id),
+  FOREIGN KEY (spouse_id) REFERENCES Employee(id)
 );
 
 CREATE TABLE Skill (
-  SkillID INTEGER PRIMARY KEY,
-  SkillName VARCHAR(255) NOT NULL,
-	Description VARCHAR(255) NOT NULL
+  id INTEGER PRIMARY KEY,
+  skill_name VARCHAR(255) NOT NULL,
+	description VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE EmployeeSkill (
-  EmployeeID INTEGER NOT NULL,
-  SkillID INTEGER NOT NULL,
-  PRIMARY KEY (EmployeeID, SkillID),
-  FOREIGN KEY (EmployeeID) REFERENCES Employee(EmployeeID),
-  FOREIGN KEY (SkillID) REFERENCES Skill(SkillID)
+CREATE TABLE Employee_Skill (
+  id INTEGER PRIMARY KEY,
+  employee_id INTEGER NOT NULL,
+  skill_id INTEGER NOT NULL,
+  FOREIGN KEY (employee_id) REFERENCES Employee(id),
+  FOREIGN KEY (skill_id) REFERENCES Skill(id)
 );
 
 CREATE TABLE Project (
-  ProjectID INTEGER PRIMARY KEY,
-  ProjectName VARCHAR(255) NOT NULL,
-  TotalBudget DECIMAL(10, 2) NOT NULL
+  id INTEGER PRIMARY KEY,
+  project_name VARCHAR(255) NOT NULL,
+  total_budget DECIMAL(10, 2) NOT NULL
 );
 
-CREATE TABLE EmployeeProject (
-  EmployeeID INTEGER NOT NULL,
-  ProjectID INTEGER NOT NULL,
-  Role VARCHAR(255) NOT NULL,
-  PRIMARY KEY (EmployeeID, ProjectID),
-  FOREIGN KEY (EmployeeID) REFERENCES Employee(EmployeeID),
-  FOREIGN KEY (ProjectID) REFERENCES Project(ProjectID)
+CREATE TABLE Employee_Project (
+  id INTEGER PRIMARY KEY,
+  employee_id INTEGER NOT NULL,
+  project_id INTEGER NOT NULL,
+  role VARCHAR(255) NOT NULL,
+  FOREIGN KEY (employee_id) REFERENCES Employee(id),
+  FOREIGN KEY (project_id) REFERENCES Project(id)
 );
 
-CREATE TABLE ProjectSkill (
-  ProjectSkillID INTEGER PRIMARY KEY,
-  ProjectID INTEGER NOT NULL,
-  SkillID INTEGER NOT NULL,
-  FOREIGN KEY (ProjectID) REFERENCES Project(ProjectID),
-  FOREIGN KEY (SkillID) REFERENCES Skill(SkillID)
+CREATE TABLE Project_Skill (
+  id INTEGER PRIMARY KEY,
+  project_id INTEGER NOT NULL,
+  skill_id INTEGER NOT NULL,
+  FOREIGN KEY (project_id) REFERENCES Project(id),
+  FOREIGN KEY (skill_id) REFERENCES Skill(id)
 );
 
 CREATE TABLE Equipment (
-  EquipmentID INTEGER PRIMARY KEY,
-  EquipmentName VARCHAR(255) NOT NULL,
-  DepartmentID INTEGER NOT NULL,
-  FOREIGN KEY (DepartmentID) REFERENCES Department(DepartmentID)
+  id INTEGER PRIMARY KEY,
+  equipment_name VARCHAR(255) NOT NULL,
+  department_id INTEGER NOT NULL,
+  FOREIGN KEY (department_id) REFERENCES Department(id)
 );
 
 CREATE TABLE Supplier (
-  SupplierID INTEGER PRIMARY KEY,
-  SupplierName VARCHAR(255) NOT NULL,
-  Address VARCHAR(255) NOT NULL,
-  PhoneNumber VARCHAR(255) NOT NULL
+  id INTEGER PRIMARY KEY,
+  supplier_name VARCHAR(255) NOT NULL,
+  address VARCHAR(255) NOT NULL,
+  phone_number VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE EquipmentSupplier (
-  EquipmentID INTEGER NOT NULL,
-  SupplierID INTEGER NOT NULL,
-	LastWorkingDate DATE,
-  PRIMARY KEY (EquipmentID, SupplierID),
-  FOREIGN KEY (EquipmentID) REFERENCES Equipment(EquipmentID),
-  FOREIGN KEY (SupplierID) REFERENCES Supplier(SupplierID)
+CREATE TABLE Equipment_Supplier (
+	id INTEGER PRIMARY KEY,
+  equipment_id INTEGER NOT NULL,
+  supplier_id INTEGER NOT NULL,
+	last_working_date DATE,
+  FOREIGN KEY (equipment_id) REFERENCES Equipment(id),
+  FOREIGN KEY (supplier_id) REFERENCES Supplier(id)
 );
 
 CREATE TABLE Country (
-  CountryID INTEGER PRIMARY KEY,
-  CountryName VARCHAR(255) NOT NULL,
-  Population INTEGER NOT NULL
+  id INTEGER PRIMARY KEY,
+  country_name VARCHAR(255) NOT NULL,
+  population INTEGER NOT NULL
 );
 
 CREATE TABLE Employment (
-  EmploymentID INTEGER PRIMARY KEY,
-  EmployeeID INTEGER NOT NULL,
-  CountryID INTEGER NOT NULL,
-  Income DECIMAL(10, 2) NOT NULL,
-  ContractStartDate DATE NOT NULL,
-  ContractEndDate DATE NOT NULL,
-  FOREIGN KEY (EmployeeID) REFERENCES Employee(EmployeeID),
-  FOREIGN KEY (CountryID) REFERENCES Country(CountryID)
+  id INTEGER PRIMARY KEY,
+  employee_id INTEGER NOT NULL,
+  country_id INTEGER NOT NULL,
+  income DECIMAL(10, 2) NOT NULL,
+  contract_start_date DATE NOT NULL,
+  contract_end_date DATE NOT NULL,
+  FOREIGN KEY (employee_id) REFERENCES Employee(id),
+  FOREIGN KEY (country_id) REFERENCES Country(id)
 );
 
--- Add data
 
--- Insert data into the Department table
-INSERT INTO Department (DepartmentID, DepartmentName, PhoneNumber)
-VALUES (1, 'Marketing', '555-555-1212'),
-       (2, 'Sales', '555-555-1213'),
-       (3, 'Engineering', '555-555-1214'),
-       (4, 'HR', '555-555-1215'),
-       (5, 'Finance', '555-555-1216'),
-       (6, 'IT', '555-555-1217'),
-       (7, 'Legal', '555-555-1218'),
-       (8, 'Operations', '555-555-1219'),
-       (9, 'Customer Support', '555-555-1220'),
-       (10, 'Research & Development', '555-555-1221'),
-       (11, 'Business Development', '555-555-1222');
+-- add INDEX
 
--- Insert data into the Skill table
-INSERT INTO Skill (SkillID, SkillName, Description)
-VALUES (1, 'Project Management', 'Ability to manage and coordinate projects from start to finish'),
-       (2, 'Programming', 'Ability to write and debug code in various programming languages'),
-       (3, 'Data Analysis', 'Ability to analyze and interpret data using statistical techniques and software'),
-       (4, 'Design', 'Ability to create visual designs using software such as Adobe Creative Suite'),
-       (5, 'Writing', 'Ability to write clear and compelling content for various mediums'),
-       (6, 'Marketing', 'Ability to develop and execute marketing campaigns and strategies'),
-       (7, 'Sales', 'Ability to identify and pursue sales leads and close deals'),
-       (8, 'Customer Service', 'Ability to assist and resolve customer inquiries and complaints'),
-       (9, 'Accounting', 'Ability to perform financial tasks such as budgeting and bookkeeping'),
-       (10, 'Legal', 'Ability to advise on and interpret laws and regulations'),
-       (11, 'Research', 'Ability to conduct research and gather information from various sources');
-
--- Insert data into the Employee table
-INSERT INTO Employee (EmployeeID, FirstName, LastName, DateOfBirth, DepartmentID, JobTitle, PhoneNumber, Address)
-VALUES (1, 'John', 'Doe', '1980-01-01', 1, 'Marketing Manager', '555-555-1223', '123 Main St'),
-       (2, 'Jane', 'Doe', '1985-02-14', 2, 'Sales Representative', '555-555-1224', '456 Main St'),
-       (3, 'Bob', 'Smith', '1990-03-21', 3, 'Software Engineer', '555-555-1225', '789 Main St'),
-       (4, 'Alice', 'Smith', '1995-04-28', 4, 'HR Manager', '555-555-1226', '321 Main St'),
-       (5, 'Charlie', 'Johnson', '2000-05-05', 5, 'Financial Analyst', '555-555-1227', '654 Main St'),
-       (6, 'Sara', 'Williams', '1998-08-16', 11, 'Business Development Representative', '555-555-1322', '246 Main St');
- 
- -- Insert data into the EmployeeSkill table
-INSERT INTO EmployeeSkill (EmployeeID, SkillID)
-VALUES (1, 1), 
-       (1, 5),  
-       (1, 6),  
-       (2, 7), 
-       (3, 2), 
-       (3, 3), 
-       (4, 4), 
-       (4, 9),  
-       (5, 10), 
-       (5, 8),
-       (6, 11);
-
--- Insert data into the EmployeeProject table
-INSERT INTO EmployeeProject (EmployeeID, ProjectID, Role)
-VALUES (1, 1, 'Project Manager'), 
-       (2, 1, 'Sales Representative'),  
-       (3, 1, 'Software Engineer'),  
-       (4, 1, 'HR Manager'), 
-       (5, 1, 'Financial Analyst'), 
-       (6, 11, 'Business Development Representative'); 
-			
--- Insert data into the ProjectSkill table
-INSERT INTO ProjectSkill (ProjectID, SkillID)
-VALUES (1, 1), 
-       (1, 2), 
-       (1, 3), 
-       (1, 4),  
-       (1, 5), 
-       (1, 6), 
-       (1, 7),  
-       (1, 8),  
-       (1, 9), 
-       (1, 10),
-       (1, 11),
-       (2, 1);
-			
--- Insert data into the Project table
-INSERT INTO Project (ProjectID, ProjectName, TotalBudget)
-VALUES (1, 'Website Redesign', 100000),
-       (2, 'New Product Launch', 200000),
-       (3, 'Marketing Campaign', 300000),
-       (4, 'Software Development', 400000),
-       (5, 'HR System Implementation', 500000),
-       (6, 'Financial Audit', 600000),
-       (7, 'Customer Support Upgrade', 700000),
-       (8, 'Operations Efficiency Improvement', 800000),
-       (9, 'Legal Review', 900000),
-       (10, 'Research & Development', 1000000),
-       (11, 'Business Development Initiative', 1100000);
-
--- Insert data into the Country table
-INSERT INTO Country (CountryID, CountryName, Population)
-VALUES (1, 'Ho Chi Minh City', 9000000),
-       (2, 'Hanoi', 7600000),
-       (3, 'Da Nang', 1300000),
-       (4, 'Can Tho', 1200000),
-       (5, 'Haiphong', 2100000),
-       (6, 'Nha Trang', 390000),
-       (7, 'Thua Thien-Hue', 340000),
-       (8, 'Quy Nhon', 330000),
-       (9, 'Ba Ria-Vung Tau', 280000),
-       (10, 'Lam Dong', 240000),
-       (11, 'Gia Lai', 220000); 
-
--- Insert data into the Employment table		 
-INSERT INTO Employment (EmploymentID, EmployeeID, CountryID, Income, ContractStartDate, ContractEndDate)
-VALUES (1, 1, 1, 75000, '2022-01-01', '2023-01-01'),  
-       (2, 2, 2, 60000, '2022-02-01', '2023-02-01'), 
-       (3, 3, 4, 50000, '2022-03-01', '2023-03-01'),  
-       (4, 4, 6, 65000, '2022-04-01', '2023-04-01'), 
-       (5, 5, 4, 55000, '2022-05-01', '2023-05-01'), 
-       (6, 6, 11, 40000, '2022-12-01', '2023-12-01'); 
-
--- Insert data into the Supplier table
-INSERT INTO Supplier (SupplierID, SupplierName, Address, PhoneNumber)
-VALUES (1, 'ACME Inc.', '123 Main Street', '555-555-1212'),
-       (2, 'XYZ Corp.', '456 Market Street', '555-555-1234'),
-       (3, 'FooBar Inc.', '789 Washington Ave', '555-555-5678'),
-       (4, 'AbcDef Co.', '246 Park Place', '555-555-9101'),
-       (5, '123 Inc.', '159 Maple Street', '555-555-1122');		 
-			 
-
--- Insert data into the Equipment table
-INSERT INTO Equipment (EquipmentID, EquipmentName, DepartmentID)
-VALUES (1, 'Laptop', 1),
-       (2, 'Desktop', 1),
-       (3, 'Printer', 2),
-       (4, 'Scanner', 2),
-       (5, 'Projector', 3),
-       (6, 'Whiteboard', 3),
-       (7, 'Telephone', 4);
-			 
- -- Insert data into the EquipmentSupplier table
-INSERT INTO EquipmentSupplier (EquipmentID, SupplierID, LastWorkingDate)
-VALUES (1, 1, '2021-01-01'),  
-       (2, 2, '2021-02-01'),  
-       (3, 3, '2021-03-01'), 
-       (4, 4, '2021-04-01'), 
-       (5, 1, '2021-05-01'),  
-       (6, 2, '2021-06-01'),  
-       (7, 5, '2021-07-01');  
-			 
-			 
--- Some query
+CREATE INDEX idx_department_name ON Department(department_name);
+CREATE INDEX idx_employee_name ON Employee(first_name, last_name);
+CREATE INDEX idx_employee_department_id ON Employee(department_id);
+CREATE INDEX idx_employee_wedding_spouses ON EmployeeWedding(employee_id, spouse_id);
+CREATE INDEX idx_skill_name ON Skill(skill_name);
+CREATE INDEX idx_employee_skill ON Employee_Skill(employee_id, skill_id);
+CREATE INDEX idx_project_name ON Project(project_name);
+CREATE INDEX idx_employee_project ON Employee_Project(employee_id, project_id);
+CREATE INDEX idx_project_skill ON Project_Skill(project_id, skill_id);
+CREATE INDEX idx_equipment_name ON Equipment(equipment_name);
+CREATE INDEX idx_equipment_department_id ON Equipment(department_id);
+CREATE INDEX idx_supplier_name ON Supplier(supplier_name);
+CREATE INDEX idx_equipment_supplier ON Equipment_Supplier(equipment_id, supplier_id);
+CREATE INDEX idx_country_name ON Country(country_name);
+CREATE INDEX idx_employment ON Employment(employee_id, country_id);
 
 
---    To retrieve a list of all employees and their department names:
+-- add row
 
-SELECT e.FirstName, e.LastName, d.DepartmentName
+INSERT INTO Department(id, department_name, phone_number) VALUES
+(1, 'Marketing', '+1 123 456 7890'),
+(2, 'Sales', '+1 123 456 7891'),
+(3, 'Support', '+1 123 456 7892'),
+(4, 'Engineering', '+1 123 456 7893'),
+(5, 'Human Resources', '+1 123 456 7894'),
+(6, 'Finance', '+1 123 456 7895'),
+(7, 'Legal', '+1 123 456 7896'),
+(8, 'Operations', '+1 123 456 7897'),
+(9, 'IT', '+1 123 456 7898'),
+(10, 'Product Management', '+1 123 456 7899'),
+(11, 'Research and Development', '+1 123 456 7900');
+
+INSERT INTO Employee(id, first_name, last_name, date_of_birth, department_id, job_title, phone_number, address) VALUES
+(1, 'John', 'Doe', '1970-01-01', 1, 'Marketing Manager', '+1 123 456 7890', '123 Main Street'),
+(2, 'Jane', 'Doe', '1980-01-01', 2, 'Sales Representative', '+1 123 456 7891', '124 Main Street'),
+(3, 'Bob', 'Smith', '1985-01-01', 3, 'Support Technician', '+1 123 456 7892', '125 Main Street'),
+(4, 'Alice', 'Smith', '1990-01-01', 4, 'Software Engineer', '+1 123 456 7893', '126 Main Street'),
+(5, 'James', 'Johnson', '1995-01-01', 5, 'HR Coordinator', '+1 123 456 7894', '127 Main Street'),
+(6, 'Emily', 'Johnson', '2000-01-01', 6, 'Accountant', '+1 123 456 7895', '128 Main Street'),
+(7, 'William', 'Williams', '2005-01-01', 7, 'Lawyer', '+1 123 456 7896', '129 Main Street'),
+(8, 'Ashley', 'Williams', '2010-01-01', 8, 'Operations Manager', '+1 123 456 7897', '130 Main Street'),
+(9, 'Michael', 'Brown', '2015-01-01', 9, 'IT Manager', '+1 123 456 7898', '131 Main Street'),
+(10, 'Samantha', 'Brown', '2020-01-01', 10, 'Product Manager', '+1 123 456 7899', '132 Main Street'),
+(11, 'Christopher', 'Davis', '1975-01-01', 1, 'Marketing Coordinator', '+1 123 456 7890', '133 Main Street'),
+(12, 'Elizabeth', 'Davis', '1982-01-01', 2, 'Sales Representative', '+1 123 456 7891', '134 Main Street'),
+(13, 'Matthew', 'Miller', '1988-01-01', 3, 'Support Technician', '+1 123 456 7892', '135 Main Street'),
+(14, 'Abigail', 'Miller', '1993-01-01', 4, 'Software Engineer', '+1 123 456 7893', '136 Main Street'),
+(15, 'David', 'Moore', '1998-01-01', 5, 'HR Coordinator', '+1 123 456 7894', '137 Main Street'),
+(16, 'Sophia', 'Moore', '2003-01-01', 6, 'Accountant', '+1 123 456 7895', '138 Main Street'),
+(17, 'Richard', 'Taylor', '2008-01-01', 7, 'Lawyer', '+1 123 456 7896', '139 Main Street'),
+(18, 'Isabella', 'Taylor', '2013-01-01', 8, 'Operations Manager', '+1 123 456 7897', '140 Main Street'),
+(19, 'Joseph', 'Anderson', '2018-01-01', 9, 'IT Technician', '+1 123 456 7898', '141 Main Street'),
+(20, 'Olivia', 'Anderson', '2023-01-01', 11, 'Research Scientist', '+1 123 456 7900', '142 Main Street');
+
+INSERT INTO EmployeeWedding(id, employee_id, spouse_id, wedding_date) VALUES
+(1, 1, 2, '2022-01-01'),
+(2, 3, 4, '2022-02-01'),
+(3, 5, 6, '2022-03-01');
+
+INSERT INTO Skill(id, skill_name, description) VALUES
+(1, 'Java', 'Programming language'),
+(2, 'Python', 'Programming language'),
+(3, 'C++', 'Programming language'),
+(4, 'C#', 'Programming language'),
+(5, 'PHP', 'Programming language'),
+(6, 'JavaScript', 'Programming language'),
+(7, 'Ruby', 'Programming language'),
+(8, 'Swift', 'Programming language'),
+(9, 'Objective-C', 'Programming language'),
+(10, 'SQL', 'Programming language for managing databases'),
+(11, 'Graphic design', 'Designing visual concepts using software'),
+(12, 'Project management', 'Planning and organizing projects'),
+(13, 'Public speaking', 'Speaking in front of an audience'),
+(14, 'Writing', 'Communicating through written words'),
+(15, 'Leadership', 'Managing and inspiring a team');
+
+
+INSERT INTO Employee_Skill(id, employee_id, skill_id) VALUES
+(1, 1, 1),
+(2, 1, 2),
+(3, 1, 3),
+(4, 2, 2),
+(5, 2, 4),
+(6, 3, 3),
+(7, 3, 5),
+(8, 4, 1),
+(9, 4, 4),
+(10, 5, 2),
+(11, 6, 3),
+(12, 6, 5),
+(13, 7, 2),
+(14, 7, 4),
+(15, 8, 1),
+(16, 8, 4),
+(17, 9, 2),
+(18, 9, 5),
+(19, 10, 3),
+(20, 10, 1),
+(21, 11, 3),
+(22, 11, 5),
+(23, 12, 2),
+(24, 12, 4),
+(25, 13, 1),
+(26, 13, 4),
+(27, 14, 2),
+(28, 14, 5),
+(29, 15, 3),
+(30, 15, 1),
+(31, 16, 3),
+(32, 16, 5),
+(33, 17, 2),
+(34, 17, 4),
+(35, 18, 1),
+(36, 18, 4),
+(37, 19, 2),
+(38, 19, 5),
+(39, 20, 3),
+(40, 20, 1);
+
+INSERT INTO Project(id, project_name, total_budget) VALUES
+(1, 'Project 1', 10000),
+(2, 'Project 2', 20000),
+(3, 'Project 3', 30000),
+(4, 'Project 4', 40000),
+(5, 'Project 5', 50000),
+(6, 'Project 6', 60000),
+(7, 'Project 7', 70000),
+(8, 'Project 8', 80000),
+(9, 'Project 9', 90000),
+(10, 'Project 10', 100000),
+(11, 'Project 11', 110000),
+(12, 'Project 12', 120000);
+
+
+INSERT INTO Project_Skill(id, project_id, skill_id) VALUES
+(1, 1, 1),
+(2, 1, 2),
+(3, 2, 3),
+(4, 2, 4),
+(5, 3, 5),
+(6, 3, 6),
+(7, 4, 1),
+(8, 4, 4),
+(9, 5, 2),
+(10, 5, 5),
+(11, 6, 3),
+(12, 6, 5),
+(13, 7, 2),
+(14, 7, 4),
+(15, 8, 1),
+(16, 8, 4),
+(17, 9, 2),
+(18, 9, 5),
+(19, 10, 3),
+(20, 10, 1),
+(21, 11, 3),
+(22, 11, 5),
+(23, 12, 2),
+(24, 12, 4),
+(25, 6, 1),
+(26, 6, 4),
+(27, 7, 2),
+(28, 7, 5),
+(29, 8, 3),
+(30, 8, 1);
+
+
+INSERT INTO Employee_Project(id, employee_id, project_id, role) VALUES
+(1, 1, 1, 'Project Manager'),
+(2, 1, 2, 'Project Manager'),
+(3, 2, 3, 'Project Manager'),
+(4, 2, 4, 'Project Manager'),
+(5, 3, 5, 'Project Manager'),
+(6, 3, 6, 'Project Manager'),
+(7, 4, 7, 'Project Manager'),
+(8, 4, 8, 'Project Manager'),
+(9, 5, 9, 'Project Manager'),
+(10, 5, 10, 'Project Manager'),
+(11, 6, 1, 'Project Manager'),
+(12, 6, 2, 'Project Manager'),
+(13, 7, 3, 'Project Manager'),
+(14, 7, 4, 'Project Manager'),
+(15, 8, 5, 'Project Manager'),
+(16, 8, 6, 'Project Manager'),
+(17, 9, 7, 'Project Manager'),
+(18, 9, 8, 'Project Manager'),
+(19, 10, 9, 'Project Manager'),
+(20, 10, 10, 'Project Manager'),
+(21, 11, 1, 'Team Lead'),
+(22, 11, 2, 'Team Lead'),
+(23, 12, 3, 'Team Lead'),
+(24, 12, 4, 'Team Lead'),
+(25, 13, 5, 'Team Lead'),
+(26, 13, 6, 'Team Lead'),
+(27, 14, 7, 'Team Lead'),
+(28, 14, 8, 'Team Lead'),
+(29, 15, 9, 'Team Lead'),
+(30, 15, 10, 'Team Lead'),
+(31, 16, 1, 'Developer'),
+(32, 16, 2, 'Developer'),
+(33, 17, 3, 'Developer'),
+(34, 17, 4, 'Developer'),
+(35, 18, 5, 'Developer'),
+(36, 18, 6, 'Developer'),
+(37, 19, 7, 'Developer'),
+(38, 19, 8, 'Developer'),
+(39, 20, 9, 'Developer'),
+(40, 20, 10, 'Developer');
+
+
+INSERT INTO Equipment(id, equipment_name, department_id) VALUES
+(1, 'Computer', 1),
+(2, 'Printer', 1),
+(3, 'Scanner', 1),
+(4, 'Projector', 2),
+(5, 'Whiteboard', 2),
+(6, 'Laptop', 3),
+(7, 'Desktop', 3),
+(8, 'Monitor', 3),
+(9, 'Tablet', 4),
+(10, 'Smartphone', 4),
+(11, 'Server', 5),
+(12, 'Router', 5),
+(13, 'Switch', 5),
+(14, 'Firewall', 6),
+(15, 'UPS', 6),
+(16, 'PDU', 6),
+(17, 'Surge protector', 7),
+(18, 'Cable', 7),
+(19, 'Keyboard', 8),
+(20, 'Mouse', 8),
+(21, 'Headphones', 9),
+(22, 'Webcam', 9),
+(23, 'Microphone', 10),
+(24, 'Speakers', 10);
+
+INSERT INTO Supplier(id, supplier_name, address, phone_number) VALUES
+(1, 'Acme Corp', '123 Main Street, Anytown, USA', '+1 123 456 7890'),
+(2, 'XYZ Inc', '456 Park Avenue, Anytown, USA', '+1 123 456 7891'),
+(3, 'ABC Enterprises', '789 Market Street, Anytown, USA', '+1 123 456 7892'),
+(4, 'Def Co', '321 Center Road, Anytown, USA', '+1 123 456 7893'),
+(5, 'Ghi Inc', '654 Hillside Drive, Anytown, USA', '+1 123 456 7894');
+
+INSERT INTO Equipment_Supplier(id, equipment_id, supplier_id) VALUES
+(1, 1, 1),
+(2, 2, 1),
+(3, 3, 1),
+(4, 4, 2),
+(5, 5, 2),
+(6, 6, 3),
+(7, 7, 3),
+(8, 8, 3),
+(9, 9, 4),
+(10, 10, 4),
+(11, 11, 5),
+(12, 12, 5),
+(14, 14, 4),
+(15, 15, 4),
+(16, 16, 2),
+(17, 17, 1),
+(18, 18, 3),
+(19, 19, 5),
+(20, 20, 5),
+(21, 21, 2),
+(22, 22, 2),
+(23, 23, 1),
+(24, 24, 1);
+
+INSERT INTO Country(id, country_name, population) VALUES
+(1, 'Hà Nội', 7664000),
+(2, 'Hồ Chí Minh', 8260000),
+(3, 'Đà Nẵng', 1269000),
+(4, 'Hải Phòng', 1939000),
+(5, 'Cần Thơ', 1255000);
+
+INSERT INTO Employment(id, employee_id, country_id, income, contract_start_date, contract_end_date) VALUES
+(1, 1, 1, 50000, '2022-01-01', '2022-12-31'),
+(2, 2, 2, 60000, '2022-01-01', '2022-12-31'),
+(3, 3, 3, 70000, '2022-01-01', '2022-12-31'),
+(4, 4, 4, 80000, '2022-01-01', '2022-12-31'),
+(5, 5, 5, 90000, '2022-01-01', '2022-12-31'),
+(6, 6, 1, 100000, '2022-01-01', '2022-12-31'),
+(7, 7, 2, 110000, '2022-01-01', '2022-12-31'),
+(8, 8, 3, 120000, '2022-01-01', '2022-12-31'),
+(9, 9, 4, 130000, '2022-01-01', '2022-12-31'),
+(10, 10, 1, 140000, '2022-01-01', '2022-12-31'),
+(11, 11, 1, 150000, '2022-01-01', '2022-12-31'),
+(12, 12, 2, 160000, '2022-01-01', '2022-12-31'),
+(13, 13, 3, 170000, '2022-01-01', '2022-12-31'),
+(14, 14, 4, 180000, '2022-01-01', '2022-12-31'),
+(15, 15, 5, 190000, '2022-01-01', '2022-12-31'),
+(16, 16, 1, 200000, '2022-01-01', '2022-12-31'),
+(17, 17, 2, 210000, '2022-01-01', '2022-12-31'),
+(18, 18, 3, 220000, '2022-01-01', '2022-12-31'),
+(19, 19, 4, 230000, '2022-01-01', '2022-12-31'),
+(20, 20, 5, 240000, '2022-01-01', '2022-12-31');
+
+-- Get the names and phone numbers of all employees:
+SELECT first_name, last_name, phone_number FROM Employee;
+
+--  Get the names of all departments and the number of employees in each department:
+SELECT d.department_name, COUNT(e.id) as employee_count
+FROM Department d
+JOIN Employee e ON d.id = e.department_id
+GROUP BY d.department_name;
+
+-- Get the names of all employees who have a specific skill:
+SELECT e.first_name, e.last_name
 FROM Employee e
-JOIN Department d ON e.DepartmentID = d.DepartmentID
+JOIN Employee_Skill es ON e.id = es.employee_id
+JOIN Skill s ON es.skill_id = s.id
+WHERE s.skill_name = 'PHP';
 
-
---    To retrieve a list of all employees and their skills:
-
-SELECT e.FirstName, e.LastName, s.SkillName
-FROM Employee e
-JOIN EmployeeSkill es ON e.EmployeeID = es.EmployeeID
-JOIN Skill s ON es.SkillID = s.SkillID
-
-
---    To retrieve a list of all projects and the skills required for each project:
-
-SELECT p.ProjectName, s.SkillName
+-- Get the names and budgets of all projects that require a specific skill:
+SELECT p.project_name, p.total_budget
 FROM Project p
-JOIN ProjectSkill ps ON p.ProjectID = ps.ProjectID
-JOIN Skill s ON ps.SkillID = s.SkillID
+JOIN Project_Skill ps ON p.id = ps.project_id
+JOIN Skill s ON ps.skill_id = s.id
+WHERE s.skill_name = 'Java';
 
---     To retrieve a list of all employees and the projects they are working on:
+-- Get the names and addresses of all suppliers that provide equipment to a specific department:
+SELECT s.supplier_name, s.address
+FROM Supplier s
+JOIN Equipment_Supplier es ON s.id = es.supplier_id
+JOIN Equipment e ON es.equipment_id = e.id
+JOIN Department d ON e.department_id = d.id
+WHERE d.department_name = 'Engineering';
 
-SELECT e.FirstName, e.LastName, p.ProjectName, ep.Role
-FROM Employee e
-JOIN EmployeeProject ep ON e.EmployeeID = ep.EmployeeID
-JOIN Project p ON ep.ProjectID = p.ProjectID
+-- Get the names and wedding dates of all employees who are married to other employees:
+SELECT CONCAT(e1.first_name," ", e1.last_name) as employee_name,
+       CONCAT(e2.first_name," ", e2.last_name) as spouse_name,
+       ew.wedding_date
+FROM EmployeeWedding ew
+JOIN Employee e1 ON ew.employee_id = e1.id
+JOIN Employee e2 ON ew.spouse_id = e2.id;
+
+-- Get the names and contract start and end dates of all employees who have worked in a specific country:
+SELECT CONCAT(e.first_name," ", e.last_name) as employee_name,
+       c.country_name,
+       em.contract_start_date, em.contract_end_date
+FROM Employment em
+JOIN Employee e ON em.employee_id = e.id
+JOIN Country c ON em.country_id = c.id
+WHERE c.country_name = 'Đà Nẵng';
+
+-- Get the names of all projects that have a budget greater than a certain amount and require a specific skill:
+SELECT p.project_name
+FROM Project p
+JOIN Project_Skill ps ON p.id = ps.project_id
+JOIN Skill s ON ps.skill_id = s.id
+WHERE p.total_budget >= 100000 AND s.skill_name = 'Java';
