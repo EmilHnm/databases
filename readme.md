@@ -316,3 +316,112 @@ Một số cách để ngăn chặn SQL injection:
 
 - Sử dụng các công cụ để phát hiện các cuộc tấn công SQL injection như SQLMap, Burp Suite, Acunetix, ... 
 
+
+# Outline
+
+## <strong>Subquery</strong> vs <strong>Inner Join</strong>
+
+<strong>Subquery</strong> là một truy vấn được lồng bên trong một truy vấn khác. Nó được sử dụng để trả về dữ liệu sẽ được sử dụng trong truy vấn bên ngoài làm điều kiện để truy vấn chính thực thi.
+
+<strong>Inner Join</strong> là một kiểu nối chỉ trả về những hàng từ cả hai bảng thỏa mãn điều kiện nối. Nó được sử dụng để kết hợp các hàng từ hai hoặc nhiều bảng dựa trên một cột có liên quan giữa chúng.
+
+<table>
+ <thead>
+    <tr>
+     <th></th>
+     <th><strong>Subquery</strong></th>
+     <th><strong>Inner Join</strong></th>
+    </tr>
+ </thead>
+ <tbody>
+    <tr>
+        <td>Điểm mạnh</td>
+        <td>
+            - Có thể được sử dụng để trả về một giá trị hoặc nhiều giá trị <br>
+            - Có thể được sử dụng trong các mệnh đề khác nhau như mệnh đề SELECT, FROM, WHERE và HAVING<br>
+            - Có thể được sử dụng để thực hiện nhiều hoạt động khác nhau, bao gồm lọc, tổng hợp và thao tác dữ liệu<br>
+        </td>
+        <td>
+            - Có thể được sử dụng để kết hợp các hàng từ hai hoặc nhiều bảng dựa trên một cột có liên quan giữa chúng<br>
+            - Hiệu quả hơn, dễ đọc và dễ hiểu hơn <strong>Subquery</strong><br>
+            - Có thể được sử dụng để trả về một số lượng lớn các hàng một cách nhanh chóng và hiệu quả<br>
+        </td>
+    </tr>
+    <tr>
+        <td>Điểm yếu</td>
+        <td>
+            - Có thể thực thi chậm hơn các loại truy vấn khác <br>
+            - Có thể khó đọc và bảo trì hơn vì chúng được lồng trong truy vấn chính <br>
+            - Một số cơ sở dữ liệu có giới hạn về số truy vấn con có thể được lồng trong một truy vấn <br>
+        </td>
+        <td>
+            - Chỉ có thể được sử dụng để kết hợp các hàng từ hai bảng <br>
+            - Có thể không phù hợp với các trường hợp có nhiều giá trị NULL trong các cột đã nối <br>
+            - Có thể không phải là cách hiệu quả nhất để kết hợp dữ liệu từ nhiều hơn hai bảng <br>
+        </td>
+    </tr>
+ </tbody>
+</table>
+
+
+Nhìn chung, <strong>Inner Join</strong> trong hiệu quả hơn và hoạt động tốt hơn <strong>Subquery</strong> vì chúng được thực hiện nhanh hơn, dễ đọc và dễ hiểu hơn. Điều này là do các kết nối bên trong không được lồng trong truy vấn chính, vì vậy chúng dễ dàng hơn cho công cụ cơ sở dữ liệu thực thi.
+
+Mặt khác, các truy vấn phụ có thể thực thi chậm hơn vì chúng được lồng trong truy vấn chính và yêu cầu công cụ cơ sở dữ liệu thực hiện truy vấn bên trong trước khi có thể thực hiện truy vấn bên ngoài. Các <strong>Subquery</strong> cũng có thể khó đọc và khó bảo trì hơn vì chúng được lồng trong truy vấn chính, điều này có thể khiến chúng khó khắc phục sự cố và gỡ lỗi hơn.
+
+
+## Indexing
+
+### Indexing mechanism  
+
+Giả sử bạn có một bảng gồm 1000 bản ghi chứa các tên người: "Phong", "Dung", "Hải",... Bạn cần tìm người tên "Nam". Vậy cơ chế lập chỉ mục sẽ hoạt động như thế nào trong trường hợp này?
+Nếu bạn có một chỉ mục trên cột tên của bảng, DBMS có thể sử dụng chỉ mục này để tìm hàng có chứa tên "Nam" hiệu quả hơn.
+
+Đây là cách cơ chế lập chỉ mục có thể hoạt động trong trường hợp này:
+
+- DBMS nhận được truy vấn yêu cầu hàng có tên "Nam".
+- DBMS xem xét chỉ mục trên cột tên để xem liệu nó có thể được sử dụng để thực hiện truy vấn hay không.
+- DBMS quét chỉ mục và tìm mục có giá trị "Nam".
+- Nếu mục nhập chỉ mục được tìm thấy, DBMS sẽ truy xuất hàng tương ứng từ bảng và trả lại cho người dùng.
+- Nếu mục nhập chỉ mục không được tìm thấy, DBMS sẽ trả về một tập hợp kết quả trống cho người dùng.
+
+Trong trường hợp này, việc sử dụng một chỉ mục sẽ cho phép DBMS tìm hàng có tên "Nam" hiệu quả hơn mà không cần phải quét qua toàn bộ bảng. Điều này có thể đặc biệt hữu ích nếu bảng lớn và chỉ mục nhỏ, vì DBMS có thể sử dụng chỉ mục để nhanh chóng định vị hàng mong muốn mà không cần phải quét qua một số lượng lớn hàng.
+
+Cần lưu ý rằng các bước và thuật toán cụ thể được DBMS sử dụng để thực hiện truy vấn có chỉ mục có thể khác nhau tùy thuộc vào DBMS và truy vấn cụ thể đang được thực thi.
+
+### Indexing algorithm 
+
+Khi một truy vấn được thực thi trong SQL, hệ thống quản lý cơ sở dữ liệu (DBMS) sẽ tìm kiếm một cách hiệu quả để thực hiện truy vấn. Nếu một chỉ mục có sẵn trên (các) cột đang được truy vấn, thì DBMS có thể sử dụng chỉ mục đó để tăng tốc độ thực hiện truy vấn.
+
+Có một số thuật toán mà DBMS có thể sử dụng khi thực hiện truy vấn với chỉ mục, bao gồm:
+
+* <strong>Index scan</strong>: Quét chỉ mục đọc toàn bộ chỉ mục từ đầu đến cuối để tìm các hàng khớp với truy vấn. Điều này có thể hiệu quả nếu chỉ mục nhỏ hoặc nếu truy vấn đang tìm kiếm một tỷ lệ phần trăm lớn các hàng trong bảng.
+* <strong>Index seek</strong>: Tìm kiếm chỉ mục chỉ đọc các mục nhập chỉ mục cụ thể cần thiết để đáp ứng truy vấn. Điều này có thể hiệu quả hơn so với quét chỉ mục nếu chỉ mục lớn và truy vấn chỉ tìm kiếm một tỷ lệ phần trăm nhỏ các hàng trong bảng.
+* <strong>Range scan</strong>: Quét phạm vi đọc qua chỉ mục để tìm tất cả các hàng khớp với một phạm vi giá trị được chỉ định trong truy vấn. Ví dụ: nếu truy vấn đang tìm kiếm tất cả các hàng có giá trị của cột nằm trong khoảng từ 10 đến 20, thì quét theo phạm vi sẽ đọc qua chỉ mục và trả về tất cả các hàng khớp với phạm vi này.
+
+Thuật toán cụ thể được sử dụng bởi DBMS sẽ phụ thuộc vào truy vấn được thực hiện và cấu trúc cũng như kích thước của chỉ mục. DBMS sẽ chọn thuật toán mà nó mong đợi sẽ hiệu quả nhất dựa trên các thuật toán tối ưu hóa bên trong của nó.
+
+## Single indexing vs B-tree indexing
+
+### Single indexing
+
+Single indexing là một cấu trúc chỉ mục đơn giản, nó chỉ lưu trữ các giá trị của cột được chỉ mục và các chỉ số của hàng tương ứng trong bảng. Ví dụ, nếu bảng có 100 hàng, thì chỉ mục sẽ lưu trữ 100 giá trị của cột được chỉ mục và các chỉ số của hàng tương ứng trong bảng. Điều này có thể hiệu quả nếu chỉ mục nhỏ hoặc nếu truy vấn đang tìm kiếm một tỷ lệ phần trăm lớn các hàng trong bảng.
+
+### B-tree indexing
+
+B-tree indexing là một cấu trúc chỉ mục phức tạp hơn, nó lưu trữ các giá trị của cột được chỉ mục và các chỉ số của hàng tương ứng trong bảng theo một cấu trúc cây. Ví dụ, nếu bảng có 100 hàng, thì chỉ mục sẽ lưu trữ 100 giá trị của cột được chỉ mục và các chỉ số của hàng tương ứng trong bảng theo một cấu trúc cây. Điều này có thể hiệu quả hơn so với chỉ mục đơn nếu chỉ mục lớn và truy vấn chỉ tìm kiếm một tỷ lệ phần trăm nhỏ các hàng trong bảng. B-tree có khẳ năng tự cân bằng để cấu trúc của B-tree luôn trong trạng thái cân bằng kể cả khi có dữ liệu được thêm vào hoặc xóa khỏi chỉ mục.
+
+### Comparing
+
+Để so sánh hai cấu trúc chỉ mục này, hãy xem xét một bảng có 100 hàng và một cột được chỉ mục có 100 giá trị khác nhau. Giả sử rằng chúng ta muốn tìm kiếm tất cả các hàng có giá trị của cột được chỉ mục nằm trong khoảng từ 10 đến 20. Để tìm kiếm tất cả các hàng khớp với phạm vi này, chúng ta sẽ sử dụng một trong hai cấu trúc chỉ mục này.
+
+Đối với chỉ mục đơn, chúng ta sẽ duyệt qua 100 giá trị của cột được chỉ mục và tìm kiếm các giá trị nằm trong khoảng từ 10 đến 20. Điều này có thể hiệu quả nếu chỉ mục nhỏ hoặc nếu truy vấn đang tìm kiếm một tỷ lệ phần trăm lớn các hàng trong bảng.
+
+Đối với chỉ mục B-tree, chúng ta sẽ duyệt qua các nút lá của cây và tìm kiếm các giá trị nằm trong khoảng từ 10 đến 20. Điều này có thể hiệu quả hơn so với chỉ mục đơn nếu chỉ mục lớn và truy vấn chỉ tìm kiếm một tỷ lệ phần trăm nhỏ các hàng trong bảng.
+
+* <strong>Cấu trúc</strong>: Lập chỉ mục đơn sử dụng một cột duy nhất để lập chỉ mục dữ liệu trong bảng, trong khi lập chỉ mục B-tree sử dụng cấu trúc dữ liệu cây cân bằng để lưu trữ dữ liệu được lập chỉ mục.
+
+* <strong>Hiệu quả</strong>: Lập chỉ mục đơn có thể hiệu quả hơn đối với các tập dữ liệu nhỏ, trong khi lập chỉ mục B-tree có thể hiệu quả hơn đối với các tập dữ liệu lớn và cho các truy vấn cần tìm kiếm các giá trị hoặc phạm vi giá trị cụ thể.
+
+* <strong>Độ phức tạp</strong>: Lập chỉ mục đơn thường dễ thực hiện và dễ hiểu hơn so với lập chỉ mục B-tree, có thể phức tạp hơn do cấu trúc dữ liệu cây.
+
+* <strong>Tính linh hoạt</strong>: Lập chỉ mục B-tree có thể được sử dụng trên một cột hoặc trên nhiều cột, trong khi lập chỉ mục đơn chỉ có thể được sử dụng trên một cột.
