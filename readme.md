@@ -418,10 +418,10 @@ B-tree indexing là một cấu trúc chỉ mục phức tạp hơn, nó lưu tr
 
 Đối với chỉ mục B-tree, chúng ta sẽ duyệt qua các nút lá của cây và tìm kiếm các giá trị nằm trong khoảng từ 10 đến 20. Điều này có thể hiệu quả hơn so với chỉ mục đơn nếu chỉ mục lớn và truy vấn chỉ tìm kiếm một tỷ lệ phần trăm nhỏ các hàng trong bảng.
 
-* <strong>Cấu trúc</strong>: Lập chỉ mục đơn sử dụng một cột duy nhất để lập chỉ mục dữ liệu trong bảng, trong khi lập chỉ mục B-tree sử dụng cấu trúc dữ liệu cây cân bằng để lưu trữ dữ liệu được lập chỉ mục.
+* <strong>Cấu trúc</strong>: chỉ mục đơn sử dụng một cột duy nhất để chỉ mục dữ liệu trong bảng, trong khi chỉ mục B-tree sử dụng cấu trúc dữ liệu cây cân bằng để lưu trữ dữ liệu được chỉ mục.
 
-* <strong>Hiệu quả</strong>: Lập chỉ mục đơn có thể hiệu quả hơn đối với các tập dữ liệu nhỏ, trong khi lập chỉ mục B-tree có thể hiệu quả hơn đối với các tập dữ liệu lớn và cho các truy vấn cần tìm kiếm các giá trị hoặc phạm vi giá trị cụ thể.
+* <strong>Hiệu quả</strong>: chỉ mục đơn có thể hiệu quả hơn đối với các tập dữ liệu nhỏ, trong khi chỉ mục B-tree có thể hiệu quả hơn đối với các tập dữ liệu lớn và cho các truy vấn cần tìm kiếm các giá trị hoặc phạm vi giá trị cụ thể.
 
-* <strong>Độ phức tạp</strong>: Lập chỉ mục đơn thường dễ thực hiện và dễ hiểu hơn so với lập chỉ mục B-tree, có thể phức tạp hơn do cấu trúc dữ liệu cây.
+* <strong>Độ phức tạp</strong>: chỉ mục đơn thường dễ thực hiện và dễ hiểu hơn so với chỉ mục B-tree, có thể phức tạp hơn do cấu trúc dữ liệu cây.
 
-* <strong>Tính linh hoạt</strong>: Lập chỉ mục B-tree có thể được sử dụng trên một cột hoặc trên nhiều cột, trong khi lập chỉ mục đơn chỉ có thể được sử dụng trên một cột.
+* <strong>Tính linh hoạt</strong>: chỉ mục B-tree có thể được sử dụng trên một cột hoặc trên nhiều cột, trong khi chỉ mục đơn chỉ có thể được sử dụng trên một cột.
